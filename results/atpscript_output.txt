@@ -1,0 +1,208 @@
++------------+-------------------------------------------------------------------------------------------+---------+
+| step       | description                                                                               | n_rows  |
++------------+-------------------------------------------------------------------------------------------+---------+
+| atpplayers | Linhas importadas do MongoDB (tabela original)                                            | 1286829 |
+| player     | Jogadores distintos (por codigo ATP)                                                      |    9960 |
+| player     | Jogadores sem local de nascimento (pais desconhecido)                                     |    6276 |
+| player     | Jogadores com local de nascimento sem pais identificado                                   |      17 |
+| player     | Jogadores com altura invalida ou em falta (NULL)                                          |    6548 |
+| player     | Jogadores sem mao dominante (NULL)                                                        |    3987 |
+| tournament | Torneios distintos                                                                        |    5332 |
+| edition    | Edicoes de torneios (torneio + local + datas)                                             |   22235 |
+| edition    | Edicoes sem pais identificado (ex.: local "TBA")                                          |      41 |
+| edition    | Edicoes sem piso (NULL)                                                                   |       6 |
+| edition    | Edicoes com data de fim invalida (NULL)                                                   |       3 |
+| game       | Jogos carregados                                                                          | 1286812 |
+| game       | Linhas perdidas na passagem atpplayers -> game (duplicados logicos / sem correspondencia) |      17 |
+| game       | Jogos com walkover (W/O)                                                                  |    5484 |
+| game       | Jogos sem ranking do adversario (NULL)                                                    |   99380 |
++------------+-------------------------------------------------------------------------------------------+---------+
++---------------------------------------+---------+-------------+--------+
+| country                               | players | tournaments | rounds |
++---------------------------------------+---------+-------------+--------+
+| United States                         |     467 |        2441 |  46439 |
+| Germany                               |     221 |        1081 |  30282 |
+| France                                |     219 |        1085 |  37130 |
+| Italy                                 |     189 |        1354 |  29612 |
+| Argentina                             |     175 |         438 |  32896 |
+| Australia                             |     160 |         579 |  16963 |
+| Spain                                 |     152 |        1080 |  34031 |
+| United Kingdom                        |     134 |         710 |  13397 |
+| Brazil                                |     126 |         715 |  17909 |
+| Russia                                |     113 |         285 |  19823 |
+| Czech Republic                        |     104 |         332 |  19847 |
+| Sweden                                |      95 |         267 |  13356 |
+| Japan                                 |      80 |         378 |   8951 |
+| Netherlands                           |      73 |         309 |  10364 |
+| India                                 |      68 |         321 |   6927 |
+| South Africa                          |      67 |         132 |   7849 |
+| Austria                               |      63 |         358 |  10785 |
+| Canada                                |      61 |         289 |   6226 |
+| Romania                               |      55 |         360 |   7906 |
+| Mexico                                |      48 |         542 |   3358 |
+| China                                 |      48 |         340 |   3376 |
+| Ukraine                               |      47 |         122 |   7678 |
+| Switzerland                           |      45 |         281 |   7119 |
+| Belgium                               |      45 |         229 |   9475 |
+| Poland                                |      42 |         262 |   4411 |
+| Croatia                               |      40 |         287 |   7285 |
+| Serbia                                |      40 |         215 |   8484 |
+| Chile                                 |      38 |         277 |   5828 |
+| Slovakia                              |      33 |         162 |   6718 |
+| Colombia                              |      32 |         237 |   3914 |
+| South Korea                           |      31 |         198 |   3271 |
+| Portugal                              |      27 |         329 |   5200 |
+| Israel                                |      27 |         234 |   3833 |
+| Finland                               |      22 |         157 |   2935 |
+| Taiwan                                |      21 |          75 |   2984 |
+| Belarus                               |      21 |          68 |   2961 |
+| Bulgaria                              |      19 |         101 |   2605 |
+| Ecuador                               |      18 |         182 |   3210 |
+| Hungary                               |      18 |         148 |   2106 |
+| New Zealand                           |      18 |         126 |   1473 |
+| Uzbekistan                            |      17 |         186 |   2415 |
+| Slovenia                              |      16 |         105 |   3399 |
+| Morocco                               |      15 |         230 |   2595 |
+| Bosnia and Herzegovina                |      15 |         119 |   4782 |
+| Peru                                  |      14 |         122 |   1952 |
+| Denmark                               |      13 |          80 |   1909 |
+| Venezuela                             |      12 |         127 |   1104 |
+| Thailand                              |      11 |         182 |   1261 |
+| Kazakhstan                            |      11 |         163 |   1129 |
+| Ireland                               |      11 |          54 |   1028 |
+| Georgia                               |      11 |          49 |   1644 |
+| Zimbabwe                              |      11 |          41 |   1269 |
+| Turkey                                |      10 |         590 |    980 |
+| Greece                                |      10 |         207 |   1248 |
+| Uruguay                               |      10 |          91 |   1741 |
+| Indonesia                             |       9 |         114 |    720 |
+| Norway                                |       9 |          61 |   1139 |
+| Nigeria                               |       8 |         108 |    291 |
+| Dominican Republic                    |       7 |          75 |   1179 |
+| Latvia                                |       7 |          41 |    829 |
+| Moldova                               |       7 |           6 |   1321 |
+| Egypt                                 |       6 |         392 |    965 |
+| Tunisia                               |       6 |         377 |   1592 |
+| Bolivia                               |       6 |          83 |    999 |
+| Estonia                               |       6 |          54 |    591 |
+| Lithuania                             |       6 |          41 |   1173 |
+| Bahamas                               |       6 |          20 |    622 |
+| Hong Kong                             |       5 |          78 |     48 |
+| Philippines                           |       5 |          52 |     82 |
+| Montenegro                            |       5 |           5 |    678 |
+| Monaco                                |       4 |          62 |    889 |
+| Paraguay                              |       3 |          63 |    458 |
+| Algeria                               |       3 |          35 |    712 |
+| Singapore                             |       3 |          33 |    285 |
+| Guatemala                             |       3 |          30 |    402 |
+| North Macedonia                       |       3 |          30 |    295 |
+| Cyprus                                |       3 |          29 |    253 |
+| Puerto Rico                           |       3 |          21 |    133 |
+| Madagascar                            |       3 |           1 |    195 |
+| Iran                                  |       2 |          81 |     62 |
+| Vietnam                               |       2 |          52 |    173 |
+| Malaysia                              |       2 |          42 |      3 |
+| United Arab Emirates                  |       2 |          41 |     72 |
+| Pakistan                              |       2 |          27 |    336 |
+| Cuba                                  |       2 |          19 |    104 |
+| New Caledonia                         |       2 |          18 |    399 |
+| Costa Rica                            |       2 |          17 |    263 |
+| Kenya                                 |       2 |          15 |     93 |
+| Ghana                                 |       2 |          11 |      2 |
+| Guadeloupe                            |       2 |          11 |    348 |
+| Armenia                               |       2 |           7 |    261 |
+| Cote d'Ivoire                         |       2 |           7 |    101 |
+| Burundi                               |       2 |           6 |     91 |
+| Curaçao                              |       2 |           6 |    217 |
+| Haiti                                 |       2 |           4 |      2 |
+| Saudi Arabia                          |       2 |           3 |    658 |
+| Luxembourg                            |       1 |          31 |    555 |
+| Lebanon                               |       1 |          26 |      0 |
+| Sri Lanka                             |       1 |          25 |      1 |
+| El Salvador                           |       1 |          24 |    376 |
+| Barbados                              |       1 |          16 |    358 |
+| Cambodia                              |       1 |          14 |     11 |
+| Réunion                              |       1 |          11 |     93 |
+| Namibia                               |       1 |           4 |     13 |
+| Togo                                  |       1 |           4 |    165 |
+| Mauritius                             |       1 |           1 |    270 |
+| Congo, The Democratic Republic of the |       1 |           0 |      2 |
+| French Polynesia                      |       1 |           0 |    605 |
+| Kyrgyzstan                            |       1 |           0 |     97 |
+| Mali                                  |       1 |           0 |     83 |
+| Martinique                            |       1 |           0 |     27 |
+| Northern Mariana Islands              |       1 |           0 |     88 |
+| Suriname                              |       1 |           0 |    155 |
+| Zambia                                |       1 |           0 |    101 |
+| Qatar                                 |       0 |          94 |      0 |
+| Kuwait                                |       0 |          64 |      0 |
+| Jamaica                               |       0 |          54 |      0 |
+| San Marino                            |       0 |          28 |      0 |
+| Bermuda                               |       0 |          17 |      0 |
+| Rwanda                                |       0 |          16 |      0 |
+| Panama                                |       0 |          15 |      0 |
+| Senegal                               |       0 |          15 |      0 |
+| Andorra                               |       0 |          13 |      0 |
+| Bahrain                               |       0 |          12 |      0 |
+| Guam                                  |       0 |          12 |      0 |
+| Uganda                                |       0 |          12 |      0 |
+| Gabon                                 |       0 |          10 |      0 |
+| Azerbaijan                            |       0 |           9 |      0 |
+| Mozambique                            |       0 |           8 |      0 |
+| Sudan                                 |       0 |           7 |      0 |
+| Syria                                 |       0 |           6 |      0 |
+| Antigua and Barbuda                   |       0 |           4 |      0 |
+| Aruba                                 |       0 |           4 |      0 |
+| Cameroon                              |       0 |           3 |      0 |
+| Malta                                 |       0 |           3 |      0 |
+| Nicaragua                             |       0 |           3 |      0 |
+| Oman                                  |       0 |           3 |      0 |
+| Bangladesh                            |       0 |           2 |      0 |
+| Botswana                              |       0 |           2 |      0 |
+| Brunei Darussalam                     |       0 |           2 |      0 |
+| Jordan                                |       0 |           2 |      0 |
+| Laos                                  |       0 |           2 |      0 |
+| Fiji                                  |       0 |           1 |      0 |
+| Honduras                              |       0 |           1 |      0 |
+| Myanmar                               |       0 |           1 |      0 |
+| Samoa                                 |       0 |           1 |      0 |
+| Tajikistan                            |       0 |           1 |      0 |
+| Trinidad and Tobago                   |       0 |           1 |      0 |
++---------------------------------------+---------+-------------+--------+
++----------------+------+-------+---------+
+| player         | wins | games | win_pct |
++----------------+------+-------+---------+
+| Rafael Nadal   | 1119 |  1343 |   83.32 |
+| Novak Djokovic | 1045 |  1262 |   82.81 |
+| Bjorn Borg     |  654 |   794 |   82.37 |
+| Jimmy Connors  | 1275 |  1558 |   81.84 |
+| Roger Federer  | 1267 |  1549 |   81.79 |
+| John McEnroe   |  883 |  1081 |   81.68 |
+| Ivan Lendl     | 1071 |  1314 |   81.51 |
+| Pete Sampras   |  763 |   988 |   77.23 |
+| Boris Becker   |  713 |   928 |   76.83 |
+| Andre Agassi   |  885 |  1163 |   76.10 |
++----------------+------+-------+---------+
++------------------+---------+----------+------------+
+| player           | gs_wins | gs_games | gs_win_pct |
++------------------+---------+----------+------------+
+| Rafael Nadal     |     298 |      339 |      87.91 |
+| Jimmy Connors    |     233 |      282 |      82.62 |
+| John McEnroe     |     167 |      205 |      81.46 |
+| Guillermo Vilas  |     138 |      183 |      75.41 |
+| Goran Ivanisevic |     110 |      160 |      68.75 |
+| Thomas Muster    |      77 |      115 |      66.96 |
+| Andres Gomez     |      61 |       92 |      66.30 |
+| Marcelo Rios     |      51 |       77 |      66.23 |
+| Henri Leconte    |      78 |      122 |      63.93 |
+| Denis Shapovalov |      29 |       46 |      63.04 |
++------------------+---------+----------+------------+
++----------------+-----------+
+| player         | hard_wins |
++----------------+-----------+
+| Roger Federer  |       790 |
+| Novak Djokovic |       648 |
+| Andre Agassi   |       606 |
+| Ti Chen        |       606 |
+| Yen-Hsun Lu    |       562 |
++----------------+-----------+

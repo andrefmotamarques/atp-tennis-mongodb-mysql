@@ -1,0 +1,111 @@
+// =====================================================================
+// atpscript.json - Limpeza dos dados no MongoDB (Trabalho ATP - Gestao de Big Data)
+// Pre-condicao: base de dados "atp" com a colecao "atpplayers" importada com:
+//   mongoimport --db atp --collection atpplayers --file atpplayers.json
+// Como correr (qualquer uma das opcoes):
+//   mongosh "mongodb://localhost:27017/atp" --file atpscript.json
+//   ou, dentro do mongosh:  load("atpscript.json")
+//   ou copiar e colar todo o conteudo no mongosh
+// Requer MongoDB 4.4 ou superior.
+// =====================================================================
+
+db = db.getSiblingDB("atp");
+var c = db.atpplayers;
+
+var nInicial = c.countDocuments({});
+print("Passo 0 - Documentos iniciais: " + nInicial);
+
+// ---------------------------------------------------------------------
+// Passo 1 - Renomear campos com erros ou nomes pouco claros
+//   GameRound -> Round | GameRank -> OpponentRank | Oponent -> Opponent
+// ---------------------------------------------------------------------
+c.updateMany(
+  { GameRound: { $exists: true } },
+  { $rename: { "GameRound": "Round", "GameRank": "OpponentRank", "Oponent": "Opponent" } }
+);
+print("Passo 1 - Campos renomeados");
+
+// ---------------------------------------------------------------------
+// Passo 2 - Criar o identificador do jogador (PlayerId) a partir do LinkPlayer.
+//   Ha jogadores diferentes com o mesmo nome (ex.: Martin Damm), por isso o
+//   nome nao serve de chave. O link tem o codigo ATP do jogador:
+//   https://www.atptour.com/en/players/novak-djokovic/d643/player-activity... -> d643
+//   Depois de extraido o codigo, o LinkPlayer deixa de ser necessario.
+// ---------------------------------------------------------------------
+c.updateMany(
+  { LinkPlayer: { $type: "string" } },
+  [
+    { $set: { PlayerId: { $arrayElemAt: [ { $split: [ "$LinkPlayer", "/" ] }, 6 ] } } },
+    { $unset: "LinkPlayer" }
+  ]
+);
+print("Passo 2 - PlayerId criado a partir do LinkPlayer");
+
+// ---------------------------------------------------------------------
+// Passo 3 - Normalizar tipos e valores em falta
+//   - texto com espacos a mais -> trim
+//   - Born vazio, Hand = "null", Ground/Prize vazios -> null
+//   - Height e OpponentRank: valores como "NA", "-" ou "" -> null (numeros passam a int)
+//   - Score: alguns valores vinham como numero -> passam a texto
+//   - "&amp;" (HTML) -> "&" em Tournament e Location
+// ---------------------------------------------------------------------
+c.updateMany(
+  {},
+  [
+    { $set: {
+        PlayerName: { $trim: { input: { $toString: "$PlayerName" } } },
+        Born: { $cond: [ { $eq: [ { $trim: { input: { $ifNull: [ { $toString: "$Born" }, "" ] } } }, "" ] },
+                         null,
+                         { $trim: { input: { $toString: "$Born" } } } ] },
+        Height: { $convert: { input: "$Height", to: "int", onError: null, onNull: null } },
+        Hand: { $cond: [ { $in: [ { $ifNull: [ "$Hand", "" ] }, [ "null", "" ] ] }, null, "$Hand" ] },
+        Tournament: { $replaceAll: { input: { $trim: { input: { $toString: "$Tournament" } } }, find: "&amp;", replacement: "&" } },
+        Location: { $replaceAll: { input: { $trim: { input: { $toString: "$Location" } } }, find: "&amp;", replacement: "&" } },
+        Date: { $trim: { input: { $toString: "$Date" } } },
+        Ground: { $cond: [ { $eq: [ { $ifNull: [ "$Ground", "" ] }, "" ] }, null, "$Ground" ] },
+        Prize: { $cond: [ { $eq: [ { $ifNull: [ "$Prize", "" ] }, "" ] }, null, "$Prize" ] },
+        Round: { $trim: { input: { $toString: "$Round" } } },
+        OpponentRank: { $convert: { input: "$OpponentRank", to: "int", onError: null, onNull: null } },
+        Opponent: { $trim: { input: { $ifNull: [ { $toString: "$Opponent" }, "" ] } } },
+        Score: { $trim: { input: { $ifNull: [ { $toString: "$Score" }, "" ] } } }
+    } }
+  ]
+);
+print("Passo 3 - Tipos e valores em falta normalizados");
+
+// ---------------------------------------------------------------------
+// Passo 4 - Remover registos que nao sao jogos:
+//   "byes" (passagem direta sem adversario) e registos sem resultado W/L
+// ---------------------------------------------------------------------
+var r4 = c.deleteMany({ $or: [ { Opponent: "bye" }, { WL: { $nin: [ "W", "L" ] } } ] });
+print("Passo 4 - Byes / registos sem resultado removidos: " + r4.deletedCount);
+
+// ---------------------------------------------------------------------
+// Passo 5 - Remover documentos duplicados (todos os campos iguais, exceto _id).
+//   Fica o primeiro de cada grupo.
+// ---------------------------------------------------------------------
+var idsDuplicados = [];
+c.aggregate(
+  [
+    { $group: {
+        _id: { p: "$PlayerId", t: "$Tournament", l: "$Location", d: "$Date", g: "$Ground", z: "$Prize",
+               r: "$Round", k: "$OpponentRank", o: "$Opponent", w: "$WL", s: "$Score" },
+        ids: { $push: "$_id" },
+        n: { $sum: 1 } } },
+    { $match: { n: { $gt: 1 } } }
+  ],
+  { allowDiskUse: true }
+).forEach(function (grupo) {
+  for (var i = 1; i < grupo.ids.length; i++) { idsDuplicados.push(grupo.ids[i]); }
+});
+var r5 = c.deleteMany({ _id: { $in: idsDuplicados } });
+print("Passo 5 - Duplicados removidos: " + r5.deletedCount);
+
+// ---------------------------------------------------------------------
+// Resumo
+// ---------------------------------------------------------------------
+var nFinal = c.countDocuments({});
+print("Documentos finais: " + nFinal + " (removidos: " + (nInicial - nFinal) + ")");
+print("Exportar com: mongoexport --db atp --collection atpplayers --type csv " +
+      "--fields PlayerId,PlayerName,Born,Height,Hand,Tournament,Location,Date,Ground,Prize,Round,OpponentRank,Opponent,WL,Score " +
+      "--out atpplayers.csv");
