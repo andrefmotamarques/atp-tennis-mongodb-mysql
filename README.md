@@ -2,7 +2,7 @@
 
 Cleaning 1.3 million ATP singles match records in MongoDB, then designing and loading a normalised relational database in MySQL with full integrity constraints, and answering four analytical questions in SQL.
 
-Individual project for the *Big Data Management* (Gestão de Big Data) course, MSc in Data Science, ISCTE (2025/26).
+Individual project for the *Big Data Management* (Gestão de Big Data) course, MSc in Data Science, ISCTE (2025/26). The full report, with the relational diagram from phpMyAdmin Designer, every cleaning step and the lost-row counts, is in [`report_pt.pdf`](report_pt.pdf) (Portuguese).
 
 ## Data
 
@@ -120,6 +120,7 @@ pipeline/correr_pipeline.bat  # end-to-end run on Windows with the course's Dock
 pipeline/import_mysql.sql     # loads the exported CSV into the raw MySQL table
 results/atpscript_output.txt  # cleaning counts and query results from a full run
 results/atpSqlResult.pptx     # results tables (Portuguese)
+report_pt.pdf                 # full written report (Portuguese)
 ```
 
 ## How to run
